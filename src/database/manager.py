@@ -8,7 +8,12 @@ from sqlalchemy import select
 
 
 from database.engine import MultiDatabaseManager
-from database.operations import DatabaseOperations, ProductOperations, UserOperations, OrderOperations
+from database.operations import (
+    DatabaseOperations,
+    ProductOperations,
+    UserOperations,
+    OrderOperations,
+)
 from config.db_config import DatabaseConfig
 from constants.db_constants import DatabaseConstants
 
@@ -139,11 +144,13 @@ class DatabaseManager:
             await self.multi_db_manager.initialize_all()
 
             # Create tables
-            # await self.multi_db_manager.create_all_tables()
+            await self.multi_db_manager.create_all_tables()
 
             # Setup operation classes
             self.operations = {
-                "users": UserOperations(self.multi_db_manager.get_engine("users_db")),  # users_db -> databasename
+                "users": UserOperations(
+                    self.multi_db_manager.get_engine("users_db")
+                ),  # users_db -> databasename
                 "products": ProductOperations(
                     self.multi_db_manager.get_engine("products_db")
                 ),

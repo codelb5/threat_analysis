@@ -4,6 +4,12 @@ import sys
 import asyncio
 from pathlib import Path
 from typing import Optional
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+
 from database.manager import DatabaseManager
 
 

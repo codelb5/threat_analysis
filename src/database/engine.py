@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 from config.db_config import DatabaseConfig
 from constants.db_constants import DatabaseConstants
+from models.db_models import User, Product, Order, Base
 
 
 class DatabaseEngine:
@@ -125,22 +126,18 @@ class MultiDatabaseManager:
         await asyncio.gather(*tasks)
         logger.info("All database engines closed")
 
-    # async def create_all_tables(self):
-    #     """Create tables in all databases"""
-    #     # Map models to their respective databases
-    #     model_mappings = {
-    #         "users_db": User,
-    #         "products_db": Product,
-    #         "orders_db": Order
-    #     }
+    async def create_all_tables(self):
+        """Create tables in all databases"""
+        # Map models to their respective databases
+        model_mappings = {"users_db": User, "products_db": Product, "orders_db": Order}
 
-    #     tasks = []
-    #     for db_name, engine in self.engines.items():
-    #         if db_name in model_mappings:
-    #             # Create a base for each model
-    #             model_class = model_mappings[db_name]
-    #             base = type(model_class).__bases__[0]  # Get the Base class
-    #             tasks.append(engine.create_tables(base))
+        tasks = []
+        for db_name, engine in self.engines.items():
+            if db_name in model_mappings:
+                # Create a base for each model
+                model_class = model_mappings[db_name]
+                base = type(model_class).__bases__[0]  # Get the Base class
+                tasks.append(engine.create_tables(Base))
 
-    #     await asyncio.gather(*tasks)
-    #     logger.info("All tables created")
+        await asyncio.gather(*tasks)
+        logger.info("All tables created")
